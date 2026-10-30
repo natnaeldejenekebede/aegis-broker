@@ -1,0 +1,195 @@
+=== NOP BASELINE VALIDATION (UNMODIFIED STARTER WORKSPACE) ===
+Timestamp: 2026-10-30T07:39:01Z
+Note: Harbor CLI ('harbor run --agent nop') is NOT RUN because Docker/Harbor are not installed in this VM.
+Below is the verbatim output of executing the task verifier (./tests/test.sh) against a clean copy of the unmodified starter workspace.
+
+--- Public Smoke Tests on Starter Workspace ---
+PASS: test_smoke_health_and_mint
+PASS: test_smoke_attenuate_and_fs_read
+PASS: test_smoke_db_query
+PASS: test_smoke_hitl_receipt_helper
+PASS: test_smoke_audit_verifier_callable
+All 5 public smoke tests passed.
+
+--- Hidden Verifier Suite (./tests/test.sh) on Starter Workspace (NOP) ---
+========================================================================
+AEGIS-BROKER HARBOR VERIFIER EVALUATION
+========================================================================
+
+[D1] Capability Tokens & Delegation (weight=0.25)
+  [POS] test_pos_d1_root_mint_and_invoke: PASS
+  [POS] test_pos_d1_multi_hop_valid_attenuation: PASS
+  [NEG] test_neg_d1_forged_or_stripped_hmac_chain: FAIL
+        FAIL: AssertionError: Expected HTTP 401, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_a9vq6drt/inst/sandbox/reports/2026/pwned.txt","bytes_written":6},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"76e0d609403d97701851d4275193d845a70c4df79b97451477ffb005f68585b9"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d1_child_widens_tools_prefixes_or_ttl: FAIL
+        FAIL: AssertionError:
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d1_lineage_quota_exhaustion_across_children: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_t6r72_hj/inst/sandbox/reports/2026/q3/summary.txt","content":"Q3 Operational Summary: All regional clusters nominal.\n"},"error_code":null,"message":null,"audit_receipt":{"seq":2,"entry_hmac":"a7a02c74a815f2f68e9c697955ae0d3b108a7b6b896b9536ca6fe8bf9d3345d6"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d1_ancestor_hop_revocation: FAIL
+        FAIL: AssertionError: Expected HTTP 401, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_ab6qcvbs/inst/sandbox/reports/2026/q3/summary.txt","content":"Q3 Operational Summary: All regional clusters nominal.\n"},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"4010da4b9553e43aaeeeeecac959e5317ee16e64915a21146ce58e3ceaae7ced"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  -> Gate G_D1=1 | Attack Rate R_D1=0.00 (0/4) | Domain Score S_D1=0.0000
+
+[D2] Filesystem Path Canonicalization & Symlinks (weight=0.20)
+  [POS] test_pos_d2_nested_sandbox_read_write: PASS
+  [POS] test_pos_d2_normalized_dot_segments_in_prefix: PASS
+  [NEG] test_neg_d2_percent_encoding_and_null_byte: FAIL
+        FAIL: AssertionError: Expected HTTP 400, got 404: {"status":"error","result":null,"error_code":"FILE_NOT_FOUND","message":"File not found: /tmp/aegis_eval_bbho8kwk/inst/sandbox/reports/%2e%2e/vault/secrets.json","audit_receipt":{"seq":0,"entry_hmac":"e41398becc7ba102c273cda1f833ebb0d750758d168e1dcf077dcf8aa1447192"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d2_dotdot_escape_outside_prefix: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_02jmrkgy/inst/sandbox/reports/2026/../../vault/secrets.json","content":"{\n  \"prod_master_token\": \"AEGIS-VAULT-CANARY-99412\"\n}\n"},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"9822d46af4623e1eaadc9005ad2453b4fba501d1eaadc76bdff418f2cf24fd27"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d2_sibling_directory_prefix_collision: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_qqfpsolx/inst/sandbox/reports_private/confidential.txt","content":"Sibling prefix trap file: must not be readable by /workspace/sandbox/reports.\n"},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"e8ae457679d96d25c601daf209bbc6ff81898821b5fbad24cc8d44ac99b373be"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d2_leaf_and_intermediate_symlink_rejected: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_vkj2r5w6/inst/sandbox/reports/shortcut_secret.txt","content":"{\n  \"prod_master_token\": \"AEGIS-VAULT-CANARY-99412\"\n}\n"},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"c043054c324ad9ec48709386c5a8aa175b7b1370894e135c4aeffe2b81d0e5e1"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  -> Gate G_D2=1 | Attack Rate R_D2=0.00 (0/4) | Domain Score S_D2=0.0000
+
+[D3] SQLite Authorizer & Transaction Safety (weight=0.15)
+  [POS] test_pos_d3_readonly_select_queries: PASS
+  [POS] test_pos_d3_readwrite_insert_and_update: PASS
+  [NEG] test_neg_d3_readonly_blocks_insert_and_cte_delete: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"rows":[]},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"0b09eb49f94529e1e39eadfd503528272b0f56928ad01a401c0820eded9f9c04"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d3_blocks_attach_pragma_and_ddl: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"rows":[]},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"2f02b84f2ab73662113f2c62d6929c5fcc497d6826e67aa049bb7daacdc247d1"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d3_blocks_system_secrets_and_sqlite_master: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"rows":[{"secret_value":"DB-SECRET-CANARY-88231"}]},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"f749b5ef98a7be765e59fa3c913eb68b07f9699959a8b48fea317d3bbd90472c"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d3_blocks_stacked_multi_statements: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"rows":[]},"error_code":null,"message":null,"audit_receipt":{"seq":0,"entry_hmac":"ed88b1a077940d66e474ef64dde092d5b2a1b8eed8a3a6f1f10144763b59ebff"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  -> Gate G_D3=1 | Attack Rate R_D3=0.00 (0/4) | Domain Score S_D3=0.0000
+
+[D4] Session Taint Tracking & HITL Receipts (weight=0.20)
+  [POS] test_pos_d4_clean_sinks_and_tainted_reads_succeed: PASS
+  [POS] test_pos_d4_tainted_sink_with_valid_hitl_receipt: PASS
+  [NEG] test_neg_d4_tainted_blocks_fs_sql_webhook_sinks: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"delivered":true,"destination":"https://attacker.tld/exfil"},"error_code":null,"message":null,"audit_receipt":{"seq":1,"entry_hmac":"4b75c10295b5d7ac24436aac60a99d000ea0beffb952143946a4b816d908a71e"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d4_hitl_nonce_replay_blocked: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_5aodxb_m/inst/sandbox/reports/once.txt","bytes_written":11},"error_code":null,"message":null,"audit_receipt":{"seq":2,"entry_hmac":"dbeb16e6945f60680650977cbf81e3ac4dae5b307075aa1e9271baba137b3af5"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d4_hitl_modified_args_or_expired_blocked: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"path":"/tmp/aegis_eval_iha_8ul0/inst/sandbox/reports/tampered_out.txt","bytes_written":14},"error_code":null,"message":null,"audit_receipt":{"seq":1,"entry_hmac":"66052b54d9802974ce478f76effed593406baffcc9e1b12559258b58f3b5ff49"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d4_second_sink_after_single_receipt_blocked: FAIL
+        FAIL: AssertionError: Expected HTTP 403, got 200: {"status":"ok","result":{"delivered":true,"destination":"https://internal.local/hook"},"error_code":null,"message":null,"audit_receipt":{"seq":2,"entry_hmac":"20906d07a877435a4283e704473ae887795e8f4e2d446a7d0f37a211ccb98f20"}}
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  -> Gate G_D4=1 | Attack Rate R_D4=0.00 (0/4) | Domain Score S_D4=0.0000
+
+[D5] Forward-Ratcheted Audit & Crash Recovery (weight=0.20)
+  [POS] test_pos_d5_mixed_ledger_and_anchor_verify: FAIL
+        FAIL: AssertionError:
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [POS] test_pos_d5_wal_crash_recovery_all_three_cases: FAIL
+        FAIL: AssertionError:
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d5_detects_mutated_historical_entry: FAIL
+        FAIL: AssertionError:
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d5_detects_resign_with_dumped_ratchet_key: FAIL
+        FAIL: AssertionError:
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d5_detects_tail_truncation_and_rollback: FAIL
+        FAIL: AssertionError:
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  [NEG] test_neg_d5_unrecoverable_tamper_fails_closed_503: FAIL
+        FAIL: AssertionError:
+        Traceback (most recent call last):
+          File "/working_dir/c_5c376b6081e94ddf/aegis-broker/tests/run_evaluation.py", line 94, in _run_single_test
+  -> Gate G_D5=0 | Attack Rate R_D5=0.00 (0/4) | Domain Score S_D5=0.0000
+
+========================================================================
+TOTAL TESTS PASSED: 8 / 30
+FINAL REWARD SCORE: 0.000
+Mean: 0.000
+========================================================================
+
+--- Contents of reward.txt ---
+0.000
+--- Contents of reward.json ---
+{
+  "domains": {
+    "D1": {
+      "attack_rate": 0.0,
+      "domain_score": 0.0,
+      "gate": 1,
+      "negative_passed": 0,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.25
+    },
+    "D2": {
+      "attack_rate": 0.0,
+      "domain_score": 0.0,
+      "gate": 1,
+      "negative_passed": 0,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    },
+    "D3": {
+      "attack_rate": 0.0,
+      "domain_score": 0.0,
+      "gate": 1,
+      "negative_passed": 0,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.15
+    },
+    "D4": {
+      "attack_rate": 0.0,
+      "domain_score": 0.0,
+      "gate": 1,
+      "negative_passed": 0,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    },
+    "D5": {
+      "attack_rate": 0.0,
+      "domain_score": 0.0,
+      "gate": 0,
+      "negative_passed": 0,
+      "negative_total": 4,
+      "positive_passed": 0,
+      "positive_total": 2,
+      "weight": 0.2
+    }
+  },
+  "reward": 0.0,
+  "tests_passed": 8,
+  "tests_total": 30
+}

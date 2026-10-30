@@ -1,0 +1,260 @@
+=== ORACLE REFERENCE SOLUTION VALIDATION (TWO CLEAN REPEATABILITY RUNS) ===
+Timestamp: 2026-10-30T07:39:07Z
+Note: Harbor CLI ('harbor run --agent oracle') is NOT RUN because Docker/Harbor are not installed in this VM.
+Below is the verbatim output of two independent clean runs of ./solution/solve.sh followed by ./tests/test.sh.
+
+########################################################################
+ORACLE REPEATABILITY RUN #1 (FRESH CLEAN WORKSPACE)
+########################################################################
+--- Step 1: Executing ./solution/solve.sh ---
+PASS: test_smoke_health_and_mint
+PASS: test_smoke_attenuate_and_fs_read
+PASS: test_smoke_db_query
+PASS: test_smoke_hitl_receipt_helper
+PASS: test_smoke_audit_verifier_callable
+All 5 public smoke tests passed.
+
+--- Step 2: Executing ./tests/test.sh ---
+========================================================================
+AEGIS-BROKER HARBOR VERIFIER EVALUATION
+========================================================================
+
+[D1] Capability Tokens & Delegation (weight=0.25)
+  [POS] test_pos_d1_root_mint_and_invoke: PASS
+  [POS] test_pos_d1_multi_hop_valid_attenuation: PASS
+  [NEG] test_neg_d1_forged_or_stripped_hmac_chain: PASS
+  [NEG] test_neg_d1_child_widens_tools_prefixes_or_ttl: PASS
+  [NEG] test_neg_d1_lineage_quota_exhaustion_across_children: PASS
+  [NEG] test_neg_d1_ancestor_hop_revocation: PASS
+  -> Gate G_D1=1 | Attack Rate R_D1=1.00 (4/4) | Domain Score S_D1=0.2500
+
+[D2] Filesystem Path Canonicalization & Symlinks (weight=0.20)
+  [POS] test_pos_d2_nested_sandbox_read_write: PASS
+  [POS] test_pos_d2_normalized_dot_segments_in_prefix: PASS
+  [NEG] test_neg_d2_percent_encoding_and_null_byte: PASS
+  [NEG] test_neg_d2_dotdot_escape_outside_prefix: PASS
+  [NEG] test_neg_d2_sibling_directory_prefix_collision: PASS
+  [NEG] test_neg_d2_leaf_and_intermediate_symlink_rejected: PASS
+  -> Gate G_D2=1 | Attack Rate R_D2=1.00 (4/4) | Domain Score S_D2=0.2000
+
+[D3] SQLite Authorizer & Transaction Safety (weight=0.15)
+  [POS] test_pos_d3_readonly_select_queries: PASS
+  [POS] test_pos_d3_readwrite_insert_and_update: PASS
+  [NEG] test_neg_d3_readonly_blocks_insert_and_cte_delete: PASS
+  [NEG] test_neg_d3_blocks_attach_pragma_and_ddl: PASS
+  [NEG] test_neg_d3_blocks_system_secrets_and_sqlite_master: PASS
+  [NEG] test_neg_d3_blocks_stacked_multi_statements: PASS
+  -> Gate G_D3=1 | Attack Rate R_D3=1.00 (4/4) | Domain Score S_D3=0.1500
+
+[D4] Session Taint Tracking & HITL Receipts (weight=0.20)
+  [POS] test_pos_d4_clean_sinks_and_tainted_reads_succeed: PASS
+  [POS] test_pos_d4_tainted_sink_with_valid_hitl_receipt: PASS
+  [NEG] test_neg_d4_tainted_blocks_fs_sql_webhook_sinks: PASS
+  [NEG] test_neg_d4_hitl_nonce_replay_blocked: PASS
+  [NEG] test_neg_d4_hitl_modified_args_or_expired_blocked: PASS
+  [NEG] test_neg_d4_second_sink_after_single_receipt_blocked: PASS
+  -> Gate G_D4=1 | Attack Rate R_D4=1.00 (4/4) | Domain Score S_D4=0.2000
+
+[D5] Forward-Ratcheted Audit & Crash Recovery (weight=0.20)
+  [POS] test_pos_d5_mixed_ledger_and_anchor_verify: PASS
+  [POS] test_pos_d5_wal_crash_recovery_all_three_cases: PASS
+  [NEG] test_neg_d5_detects_mutated_historical_entry: PASS
+  [NEG] test_neg_d5_detects_resign_with_dumped_ratchet_key: PASS
+  [NEG] test_neg_d5_detects_tail_truncation_and_rollback: PASS
+  [NEG] test_neg_d5_unrecoverable_tamper_fails_closed_503: PASS
+  -> Gate G_D5=1 | Attack Rate R_D5=1.00 (4/4) | Domain Score S_D5=0.2000
+
+========================================================================
+TOTAL TESTS PASSED: 30 / 30
+FINAL REWARD SCORE: 1.000
+Mean: 1.000
+========================================================================
+
+--- Run #1 reward.txt ---
+1.000
+--- Run #1 reward.json ---
+{
+  "domains": {
+    "D1": {
+      "attack_rate": 1.0,
+      "domain_score": 0.25,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.25
+    },
+    "D2": {
+      "attack_rate": 1.0,
+      "domain_score": 0.2,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    },
+    "D3": {
+      "attack_rate": 1.0,
+      "domain_score": 0.15,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.15
+    },
+    "D4": {
+      "attack_rate": 1.0,
+      "domain_score": 0.2,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    },
+    "D5": {
+      "attack_rate": 1.0,
+      "domain_score": 0.2,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    }
+  },
+  "reward": 1.0,
+  "tests_passed": 30,
+  "tests_total": 30
+}
+
+########################################################################
+ORACLE REPEATABILITY RUN #2 (FRESH CLEAN WORKSPACE)
+########################################################################
+--- Step 1: Executing ./solution/solve.sh ---
+PASS: test_smoke_health_and_mint
+PASS: test_smoke_attenuate_and_fs_read
+PASS: test_smoke_db_query
+PASS: test_smoke_hitl_receipt_helper
+PASS: test_smoke_audit_verifier_callable
+All 5 public smoke tests passed.
+
+--- Step 2: Executing ./tests/test.sh ---
+========================================================================
+AEGIS-BROKER HARBOR VERIFIER EVALUATION
+========================================================================
+
+[D1] Capability Tokens & Delegation (weight=0.25)
+  [POS] test_pos_d1_root_mint_and_invoke: PASS
+  [POS] test_pos_d1_multi_hop_valid_attenuation: PASS
+  [NEG] test_neg_d1_forged_or_stripped_hmac_chain: PASS
+  [NEG] test_neg_d1_child_widens_tools_prefixes_or_ttl: PASS
+  [NEG] test_neg_d1_lineage_quota_exhaustion_across_children: PASS
+  [NEG] test_neg_d1_ancestor_hop_revocation: PASS
+  -> Gate G_D1=1 | Attack Rate R_D1=1.00 (4/4) | Domain Score S_D1=0.2500
+
+[D2] Filesystem Path Canonicalization & Symlinks (weight=0.20)
+  [POS] test_pos_d2_nested_sandbox_read_write: PASS
+  [POS] test_pos_d2_normalized_dot_segments_in_prefix: PASS
+  [NEG] test_neg_d2_percent_encoding_and_null_byte: PASS
+  [NEG] test_neg_d2_dotdot_escape_outside_prefix: PASS
+  [NEG] test_neg_d2_sibling_directory_prefix_collision: PASS
+  [NEG] test_neg_d2_leaf_and_intermediate_symlink_rejected: PASS
+  -> Gate G_D2=1 | Attack Rate R_D2=1.00 (4/4) | Domain Score S_D2=0.2000
+
+[D3] SQLite Authorizer & Transaction Safety (weight=0.15)
+  [POS] test_pos_d3_readonly_select_queries: PASS
+  [POS] test_pos_d3_readwrite_insert_and_update: PASS
+  [NEG] test_neg_d3_readonly_blocks_insert_and_cte_delete: PASS
+  [NEG] test_neg_d3_blocks_attach_pragma_and_ddl: PASS
+  [NEG] test_neg_d3_blocks_system_secrets_and_sqlite_master: PASS
+  [NEG] test_neg_d3_blocks_stacked_multi_statements: PASS
+  -> Gate G_D3=1 | Attack Rate R_D3=1.00 (4/4) | Domain Score S_D3=0.1500
+
+[D4] Session Taint Tracking & HITL Receipts (weight=0.20)
+  [POS] test_pos_d4_clean_sinks_and_tainted_reads_succeed: PASS
+  [POS] test_pos_d4_tainted_sink_with_valid_hitl_receipt: PASS
+  [NEG] test_neg_d4_tainted_blocks_fs_sql_webhook_sinks: PASS
+  [NEG] test_neg_d4_hitl_nonce_replay_blocked: PASS
+  [NEG] test_neg_d4_hitl_modified_args_or_expired_blocked: PASS
+  [NEG] test_neg_d4_second_sink_after_single_receipt_blocked: PASS
+  -> Gate G_D4=1 | Attack Rate R_D4=1.00 (4/4) | Domain Score S_D4=0.2000
+
+[D5] Forward-Ratcheted Audit & Crash Recovery (weight=0.20)
+  [POS] test_pos_d5_mixed_ledger_and_anchor_verify: PASS
+  [POS] test_pos_d5_wal_crash_recovery_all_three_cases: PASS
+  [NEG] test_neg_d5_detects_mutated_historical_entry: PASS
+  [NEG] test_neg_d5_detects_resign_with_dumped_ratchet_key: PASS
+  [NEG] test_neg_d5_detects_tail_truncation_and_rollback: PASS
+  [NEG] test_neg_d5_unrecoverable_tamper_fails_closed_503: PASS
+  -> Gate G_D5=1 | Attack Rate R_D5=1.00 (4/4) | Domain Score S_D5=0.2000
+
+========================================================================
+TOTAL TESTS PASSED: 30 / 30
+FINAL REWARD SCORE: 1.000
+Mean: 1.000
+========================================================================
+
+--- Run #2 reward.txt ---
+1.000
+--- Run #2 reward.json ---
+{
+  "domains": {
+    "D1": {
+      "attack_rate": 1.0,
+      "domain_score": 0.25,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.25
+    },
+    "D2": {
+      "attack_rate": 1.0,
+      "domain_score": 0.2,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    },
+    "D3": {
+      "attack_rate": 1.0,
+      "domain_score": 0.15,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.15
+    },
+    "D4": {
+      "attack_rate": 1.0,
+      "domain_score": 0.2,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    },
+    "D5": {
+      "attack_rate": 1.0,
+      "domain_score": 0.2,
+      "gate": 1,
+      "negative_passed": 4,
+      "negative_total": 4,
+      "positive_passed": 2,
+      "positive_total": 2,
+      "weight": 0.2
+    }
+  },
+  "reward": 1.0,
+  "tests_passed": 30,
+  "tests_total": 30
+}

@@ -1,0 +1,38 @@
+schema_version = "1.3"
+
+[task]
+name = "local/aegis-broker"
+description = "Implement a capability-attenuated AI agent tool broker with path canonicalization, SQLite authorizer isolation, session taint tracking, single-use HITL receipts, and forward-ratcheted tamper-evident audit logging."
+keywords = [
+    "cybersecurity",
+    "ai-agent-security",
+    "capability-tokens",
+    "taint-tracking",
+    "sqlite-authorizer",
+    "audit-ledger",
+    "fastapi",
+]
+
+[metadata]
+category = "cybersecurity"
+difficulty = "hard"
+difficulty_explanation = "Requires coordinating chained HMAC capability attenuation, segment-aware path and symlink canonicalization, SQLite bytecode authorizers, session taint state machines with single-use HITL receipts, and WAL-backed forward-ratcheted audit logs across six modules."
+
+[agent]
+timeout_sec = 72000
+user = "agent"
+network_mode = "no-network"
+
+[verifier]
+timeout_sec = 300.0
+user = "root"
+environment_mode = "shared"
+network_mode = "no-network"
+
+[environment]
+build_timeout_sec = 600.0
+network_mode = "no-network"
+workdir = "/workspace"
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240

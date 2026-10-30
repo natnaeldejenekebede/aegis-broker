@@ -1,0 +1,10 @@
+jobs/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+*.pem
+*.key
+id_rsa

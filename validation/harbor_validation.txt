@@ -1,0 +1,7 @@
+=== HARBOR & DOCKER ENVIRONMENT CHECK ===
+Timestamp: 2026-10-30T07:38:58Z
+Command: harbor --version
+Status: NOT RUN (Blocker: 'harbor' CLI is not installed in this isolated VM sandbox; outbound internet and package installation are disabled).
+
+Command: docker --version
+Status: NOT RUN (Blocker: 'docker' daemon/CLI is not installed in this unprivileged VM sandbox).

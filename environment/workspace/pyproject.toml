@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis-broker"
+version = "0.1.0"
+description = "Capability-attenuated AI agent tool execution broker"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.115.0",
+    "pydantic==2.9.2",
+    "uvicorn==0.30.6",
+    "httpx==0.27.2",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["/workspace", "."]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

@@ -1,0 +1,23 @@
+=== STATIC, STRUCTURAL & TASK CHECKER VALIDATION ===
+Timestamp: 2026-10-30T07:38:58Z
+
+--- 1. frontierswe-check.py Check ---
+Status: NOT RUN (Blocker: 'frontierswe-check.py' is not present in the local VM filesystem).
+
+--- 2. Python Syntax Compilation (py_compile) ---
+PASS: All 14 Python modules compiled with zero syntax errors.
+
+--- 3. TOML Schema & Instruction Canary/Footer Audit ---
+PASS: task.toml parsed cleanly (schema_version=1.3, timeout_sec=3600)
+PASS: pyproject.toml parsed cleanly.
+PASS: instruction.md canary comment and timeout footer verified.
+
+--- 4. Leak & Permission Audit ---
+PASS: Zero hidden test or solution files inside environment/.
+PASS: solution/solve.sh and tests/test.sh have executable permissions.
+
+--- 5. Reset Script Safety Guard Check ---
+PASS: Reset script rejected unsafe path /: Refusing to use top-level directory as managed target: /
+PASS: Reset script rejected unsafe path /workspace: Refusing to use top-level directory as managed target: /workspace
+PASS: Reset script rejected unsafe path /etc/sandbox: Refusing to operate inside protected system path: /etc/sandbox
+PASS: Reset script rejected unsafe path /tmp/not_sandbox_leaf: Managed directory leaf must be 'sandbox', got 'not_sandbox_leaf'
