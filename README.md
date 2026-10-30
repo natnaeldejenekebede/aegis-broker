@@ -15,7 +15,8 @@ The benchmark grades five orthogonal security domains ($D_1 \dots D_5$) across *
 | **D5: Forward-Ratcheted Audit & Recovery** | `0.20` | `app/audit.py` | Dual SHA-256 forward-ratcheting keys ($K_{i+1} = \text{SHA256}(K_i)$, $A_{i+1} = \text{SHA256}(A_i)$), WAL crash recovery across all three crash states (`audit_wal.commit`), tail-truncation detection via `audit_anchor.json`, and fail-closed `503 AUDIT_STATE_CORRUPTED` behavior. |
 
 ### Explicit Audit Threat Model Boundary
-Because the broker runs inside a single container without an external network witness, forward key ratcheting ($K_i \rightarrow K_{i+1}, A_i \rightarrow A_{i+1}$) mathematically prevents post-compromise modification, insertion, middle-deletion, or uncoordinated tail truncation of historical entries $0 \dots N-1$. Detecting a full-disk snapshot rollback (where an attacker with root access at step $m < N$ snapshots all three state files `audit.jsonl`, `audit_anchor.json`, and `ratchet_state.json` together and restores all three at step $N$) requires an external witness (`expected_min_seq` from client `audit_receipt` responses). Similarly, post-compromise fabrication of *future* entries $\ge N$ is outside the scope of local-only historical forward security.
+The audit subsystem uses one-way SHA-256 key ratcheting ($K_i \rightarrow K_{i+1}, A_i \rightarrow A_{i+1}$). Assuming prior ratchet keys are securely erased and the trusted anchor remains intact, this design provides historical integrity: an attacker who obtains the current ratchet keys cannot use them to recompute valid authentication values for previously committed entries. It can therefore detect historical modification, insertion, middle deletion, and uncoordinated tail truncation under these assumptions.
+Detecting a full-disk snapshot rollback (where an attacker with root access at step $m < N$ snapshots all three state files `audit.jsonl`, `audit_anchor.json`, and `ratchet_state.json` together and restores all three at step $N$) requires an external witness (`expected_min_seq` from client `audit_receipt` responses). Similarly, post-compromise fabrication of *future* entries $\ge N$ is outside the scope of local-only historical forward security.
 
 ## 2. Scoring Formula
 
@@ -23,7 +24,7 @@ The verifier (`tests/run_evaluation.py`) computes the total score $S_{\text{tota
 
 $$G_m = \prod_{j=1}^{2} p_{m,j}, \qquad R_m = \frac{1}{4} \sum_{k=1}^{4} a_{m,k}, \qquad S_{\text{total}} = \text{round}\!\left(\sum_{m=1}^{5} w_m \cdot G_m \cdot R_m,\; 3\right)$$
 
-- **Starter Baseline (`nop`)**: All positive functional gates pass ($G_1 = G_2 = G_3 = G_4 = 1, G_5 = 0$), while all 20 negative security attack tests fail ($R_m = 0.0$ for all $m$), yielding **`0.000`**.
+- **Starter Baseline (`nop`)**: The positive functional gates pass for D1–D4, but fail for D5 ($G_1 = G_2 = G_3 = G_4 = 1,\; G_5 = 0$). All 20 negative security checks fail against the vulnerable starter implementation ($R_m = 0.0$ for all domains), yielding **`0.000`**.
 - **Reject-All Baseline**: Blocking all requests fails the positive functional gates ($G_m = 0$ for all $m$), yielding **`0.000`**.
 - **Reference Solution (`oracle` / `solution/solve.sh`)**: Passes all 10 positive gate tests ($G_m = 1$) and all 20 negative attack tests ($R_m = 1.0$), yielding **`1.000`**.
 
